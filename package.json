@@ -1,0 +1,16 @@
+{
+  "name": "homebridge-valor-fireplace",
+  "version": "1.0.0",
+  "description": "Homebridge plugin for controlling 315 MHz Valor fireplaces",
+  "author": "Matthew Hall",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "node": ">=4.0.0",
+    "homebridge": ">=0.2.0"
+  },
+  "dependencies": {
+    "rpio": "^0.9.12"
+  }
+}
