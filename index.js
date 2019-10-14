@@ -1,22 +1,22 @@
 'use strict';
-var VRT = require('./lib/ValorRemoteTransmitter.js');
+var RT = require('./lib/RemoteTransmitter.js');
 
 var Service, Characteristic;
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory('homebridge-valor-fireplace', 'valorremote', RTAccessory);
+  homebridge.registerAccessory('homebridge-fireplace', 'fireplace', RTAccessory);
 };
 
 function RTAccessory(log, config) {
 
   // unique 17 bit address of fireplace
   var address = config.address;
-  // GPIO pin with 315MHz transmitter
+  // GPIO pin with transmitter
   var pin = config.pin;
 
-  var vrt = VRT(address, pin);
+  var rt = RT(address, pin);
   var platform = this;
   this.log = log;
 
@@ -42,8 +42,8 @@ function RTAccessory(log, config) {
 
   // prevent soft shutdown after 6 hours
   function doRefresh() {
-    vrt.setLevel(currHeight - 6);
-    setTimeout((function() { vrt.setLevel(currHeight); }), 2000);
+    rt.setLevel(currHeight - 6);
+    setTimeout((function() { rt.setLevel(currHeight); }), 2000);
   }
   var refreshTimer;
 
@@ -53,7 +53,7 @@ function RTAccessory(log, config) {
       // update status between 'on' and 'off'
       if (switchOn != isOn) {
         platform.log(config.name, "switch -> " + switchOn);
-        vrt.setOnOff(switchOn, coldOn);
+        rt.setOnOff(switchOn, coldOn);
         isOn = switchOn;
         coldOn = false;
 	currHeight = switchOn ? 100 : 0;
@@ -76,7 +76,7 @@ function RTAccessory(log, config) {
   // adjust flame height
   rsChar.on('set', function(level, callback) {
     platform.log(config.name, "level -> " + level);
-    vrt.setLevel(level);
+    rt.setLevel(level);
     // if sufficient flame height change, reset auto-off timer
     if (Math.abs(level - currHeight) > 5) {
       clearInterval(refreshTimer);

@@ -1,7 +1,7 @@
 {
-  "name": "homebridge-valor-fireplace",
+  "name": "homebridge-fireplace",
   "version": "1.0.0",
-  "description": "Homebridge plugin for controlling 315 MHz Valor fireplaces",
+  "description": "Homebridge plugin for controlling remote control fireplaces",
   "author": "Matthew Hall",
   "keywords": [
     "homebridge-plugin"

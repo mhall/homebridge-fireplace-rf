@@ -1,7 +1,7 @@
-Homebridge Plugin for Valor Fireplaces
-======================================
+Homebridge Plugin for Remote Control Gas Fireplaces
+===================================================
 
-This is a [Homebridge](https://github.com/nfarina/homebridge) Node.js plugin to enable Homekit control of Valor gas fireplaces that use a 315 MHz remote control. You will be able to fully control the fireplace via Apple HomeKit, including on/off, light, and flame height. Since HomeKit does not include a dedicated accessory type for Fireplace, I used the Air Purifier accessory type. The icon and available HomeKit characteristics are reasonable for a fireplace.
+This is a [Homebridge](https://github.com/nfarina/homebridge) Node.js plugin to enable Homekit control of gas fireplaces that use a 315 MHz Mertik Maxitrol remote control. You will be able to fully control the fireplace via Apple HomeKit, including on/off, light, and flame height. Since HomeKit does not include a dedicated accessory type for Fireplace, I used the Air Purifier accessory type. The icon and available HomeKit characteristics are reasonable for a fireplace.
 
 Pre-setup Notes
 ---------------
@@ -15,10 +15,10 @@ Unfortunately, the address does not appear to be printed on the remote or otherw
 
 Installation
 ------------
-After obtaining the necessary hardware and determining the address of your fireplace, installation is similar to any other Homebridge plugin. I have not published this to npm so I recommend cloning this repo and then using the `-P` option when launching Homebridge to specify the path to the plugin code. Install the `rpio` dependency via npm. Then, add the following to your `config.json` file in the `accessories` section:
+After obtaining the necessary hardware and determining the address of your fireplace, installation is similar to any other Homebridge plugin. I have not published this to npm so I recommend cloning this repo and then using the `-P` option when launching Homebridge to specify the path to the plugin code. Install the `rpio` dependency via npm in the root of the project. Then, add the following to your Homebridge `config.json` file in the `accessories` section:
 
     {
-        "accessory": "valorremote",
+        "accessory": "fireplace",
         "name": "Fireplace",
         "pin": 11,
         "address": "01011100000100001"
