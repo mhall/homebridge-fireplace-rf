@@ -15,7 +15,7 @@ Unfortunately, the address does not appear to be printed on the remote or otherw
 
 Installation
 ------------
-After obtaining the necessary hardware and determining the address of your fireplace, installation is similar to any other Homebridge plugin. I have not published this to npm so I recommend cloning this repo and then using the `-P` option when launching Homebridge to specify the path to the plugin code. Install the `rpio` dependency via npm in the root of the project. Then, add the following to your Homebridge `config.json` file in the `accessories` section:
+After obtaining the necessary hardware and determining the address of your fireplace, installation is similar to any other Homebridge plugin. I have not published this to npm so I recommend cloning this repo and then adding the plugin to the homebridge `package.json` dependencies with the `file:` option. Then, add the following to your Homebridge `config.json` file in the `accessories` section:
 
     {
         "accessory": "fireplace",

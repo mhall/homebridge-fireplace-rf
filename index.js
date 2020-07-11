@@ -6,7 +6,7 @@ var Service, Characteristic;
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory('homebridge-fireplace', 'fireplace', RTAccessory);
+  homebridge.registerAccessory('homebridge-fireplace-rf', 'fireplace', RTAccessory);
 };
 
 function RTAccessory(log, config) {
