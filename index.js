@@ -26,8 +26,9 @@ function RTAccessory(log, config) {
   this.service = new Service['AirPurifier'](this.name);
 
   // Air Purifier rotation speed will be used to determine flame height
-  var rsChar = this.service.addCharacteristic(Characteristic.RotationSpeed);
   var apChar = this.service.getCharacteristic(Characteristic.CurrentAirPurifierState);
+  var aptChar = this.service.getCharacteristic(Characteristic.TargetAirPurifierState);
+  var rsChar = this.service.addCharacteristic(Characteristic.RotationSpeed);
 
   // if coldOn, need to send 'light' command before increasing flame height
   var coldOn = true;
@@ -43,7 +44,7 @@ function RTAccessory(log, config) {
 
   // prevent soft shutdown after 6 hours
   function doRefresh() {
-    rt.setLevel(currHeight - 6);
+    rt.setLevel(currHeight - 10);
     setTimeout((function() { rt.setLevel(currHeight); }), 2000);
   }
   var refreshTimer;
@@ -55,21 +56,22 @@ function RTAccessory(log, config) {
       // update status between 'on' and 'off'
       if (switchOn != isOn) {
         platform.log(config.name, "switch -> " + switchOn);
-        rt.setOnOff(switchOn, coldOn);
-        isOn = switchOn;
-        coldOn = false;
-	currHeight = switchOn ? 100 : 0;
-        apChar.updateValue(switchOn ? Characteristic.CurrentAirPurifierState.PURIFYING_AIR : Characteristic.CurrentAirPurifierState.INACTIVE);
-        rsChar.updateValue(switchOn ? 100 : 0);
+	aptChar.updateValue(switchOn ? Characteristic.TargetAirPurifierState.AUTO : Characteristic.TargetAirPurifierState.MANUAL);
+        setTimeout((function() {
+	  rt.setOnOff(switchOn, coldOn);
+          isOn = switchOn;
+          coldOn = switchOn ? false : coldOn;
+          apChar.updateValue(switchOn ? Characteristic.CurrentAirPurifierState.PURIFYING_AIR : Characteristic.CurrentAirPurifierState.INACTIVE);
+	  currHeight = switchOn ? 100 : 0;
+          rsChar.updateValue(currHeight);
+	}), 10);
       }
-      // handle soft and hard shutdown timers as appropriate
+      // handle soft and hard shutdown timers
+      clearInterval(coldTimer);
+      clearInterval(refreshTimer);
       if (switchOn) {
-        clearInterval(coldTimer);
-        clearInterval(refreshTimer);
         refreshTimer = setInterval(doRefresh, refreshLim);
       } else {
-        clearInterval(refreshTimer);
-        clearInterval(coldTimer);
         coldTimer = setInterval((function() { coldOn = true; }), coldLim);
       }
       callback();
@@ -79,7 +81,7 @@ function RTAccessory(log, config) {
   rsChar.on('set', function(level, callback) {
     if (isOn) {
       platform.log(config.name, "level -> " + level);
-      rt.setLevel(level);
+      setTimeout((function() { rt.setLevel(level); }), 10);
       // if sufficient flame height change, reset auto-off timer
       if (Math.abs(level - currHeight) > 5) {
         clearInterval(refreshTimer);
